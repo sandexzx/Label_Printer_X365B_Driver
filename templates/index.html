@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Печать текста</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <form id="printForm" enctype="multipart/form-data">
+        <label for="text">Введите текст для печати:</label><br>
+        <textarea name="text" id="text" rows="4" cols="50"></textarea><br>
+
+        <label for="fontSize">Размер шрифта:</label><br>
+        <input type="number" name="fontSize" id="fontSize" value="18"><br>
+
+        <label for="endBlankLines">Количество пустых строк в конце:</label><br>
+        <input type="number" name="endBlankLines" id="endBlankLines" value="3"><br>
+
+        <label for="imageUpload">Загрузить картинку:</label><br>
+        <input type="file" name="image" id="imageUpload"><br>
+
+        <input type="submit" value="Отправить на печать">
+    </form>
+    <div id="message"></div>
+
+    <script>
+    $(document).ready(function(){
+        $("#printForm").submit(function(event){
+            event.preventDefault();
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '/',
+                type: 'post',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response){
+                    $("#message").html(response);
+                    $("#printForm").trigger("reset"); // Сброс формы после отправки
+                },
+                error: function(xhr, status, error){
+                    $("#message").html("Ошибка: " + error);
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
